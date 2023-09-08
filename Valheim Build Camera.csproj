@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Valheim_Build_Camera</RootNamespace>
     <AssemblyName>Build Camera</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <LangVersion>latestmajor</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,19 +36,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>G:\Steam\steamapps\common\Valheim\BepInEx\core\0Harmony.dll</HintPath>
+      <HintPath>..\References\BepInEx\5.4.2103\BepInEx\core\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_utils_publicized">
-      <HintPath>G:\Steam\steamapps\common\Valheim\valheim_Data\Managed\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
+    <Reference Include="assembly_utils">
+      <HintPath>..\References\Valheim\0.217.14\assembly_utils_publicized.dll</HintPath>
     </Reference>
-    <Reference Include="assembly_valheim_publicized">
-      <HintPath>G:\Steam\steamapps\common\Valheim\valheim_Data\Managed\publicized_assemblies\assembly_valheim_publicized.dll</HintPath>
+    <Reference Include="assembly_valheim">
+      <HintPath>..\References\Valheim\0.217.14\assembly_valheim_publicized.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>G:\Steam\steamapps\common\Valheim\BepInEx\core\BepInEx.dll</HintPath>
-    </Reference>
-    <Reference Include="BepInEx.Harmony">
-      <HintPath>G:\Steam\steamapps\common\Valheim\BepInEx\core\BepInEx.Harmony.dll</HintPath>
+      <HintPath>..\References\BepInEx\5.4.2103\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -72,11 +70,36 @@
     <Compile Include="BuildCamera.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="hammer.png" />
+    <Content Include="icon.png" />
+    <Content Include="ILRepack.targets" />
+    <Content Include="LICENSE.txt" />
+    <Content Include="manifest.json" />
+    <Content Include="readme.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "G:\Steam\steamapps\common\Valheim\BepInEx\plugins" /Y
-
-del "Valheim Build Camera.zip"
-"C:\Program Files\7-Zip\7z.exe" a "Valheim Build Camera.zip" "$(TargetPath)"</PostBuildEvent>
-  </PropertyGroup>
+  <Target Name="CopyToDev" AfterTargets="ILRepack">
+    <Exec Command="xcopy &quot;$(TargetDir)$(TargetFileName)&quot; &quot;G:\Steam\steamapps\common\Valheim-Dev\BepInEx\plugins\$(ProjectName)\&quot; /q /y /i" />
+  </Target>
+  <Target Name="Copy" AfterTargets="ILRepack" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Exec Command="xcopy &quot;$(TargetDir)$(TargetFileName)&quot; &quot;M:\Code\VapokModBase\Releases\$(ProjectName)-Vapok\plugins\&quot; /q /y /i" />
+    <Exec Command="xcopy &quot;M:\Code\VapokModBase\$(ProjectName)\Translations\*.json&quot; &quot;M:\Code\VapokModBase\Releases\$(ProjectName)-Vapok\plugins\Translations\&quot; /q /y /i" />
+    <Exec Command="xcopy &quot;M:\Code\VapokModBase\$(ProjectName)\LICENSE.md&quot; &quot;M:\Code\VapokModBase\Releases\$(ProjectName)-Vapok\&quot; /q /y /i" />
+    <Exec Command="xcopy &quot;M:\Code\VapokModBase\$(ProjectName)\manifest.json&quot; &quot;M:\Code\VapokModBase\Releases\$(ProjectName)-Vapok\&quot; /q /y /i" />
+    <Exec Command="xcopy &quot;M:\Code\VapokModBase\$(ProjectName)\CHANGELOG.md&quot; &quot;M:\Code\VapokModBase\Releases\$(ProjectName)-Vapok\&quot; /q /y /i" />
+    <Exec Command="xcopy &quot;M:\Code\VapokModBase\$(ProjectName)\README.md&quot; &quot;M:\Code\VapokModBase\Releases\$(ProjectName)-Vapok\&quot; /q /y /i" />
+    <Exec Command="xcopy &quot;M:\Code\VapokModBase\$(ProjectName)\icon.png&quot; &quot;M:\Code\VapokModBase\Releases\$(ProjectName)-Vapok\&quot; /q /y /i" />
+  </Target>
+  <Import Project="..\packages\ILRepack.Lib.MSBuild.Task.2.0.18.2\build\ILRepack.Lib.MSBuild.Task.targets" Condition="Exists('..\packages\ILRepack.Lib.MSBuild.Task.2.0.18.2\build\ILRepack.Lib.MSBuild.Task.targets')" />
+  <Import Project="packages\ILRepack.Lib.MSBuild.Task.2.0.18.2\build\ILRepack.Lib.MSBuild.Task.targets" Condition="Exists('packages\ILRepack.Lib.MSBuild.Task.2.0.18.2\build\ILRepack.Lib.MSBuild.Task.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\ILRepack.Lib.MSBuild.Task.2.0.18.2\build\ILRepack.Lib.MSBuild.Task.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\ILRepack.Lib.MSBuild.Task.2.0.18.2\build\ILRepack.Lib.MSBuild.Task.targets'))" />
+  </Target>
 </Project>

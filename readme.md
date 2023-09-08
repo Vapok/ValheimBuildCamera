@@ -42,7 +42,9 @@ I've been told Build Camera is compatible with with kailen37's FirstPerson mod o
 This mod only needs to be installed on your client, not the server, and other clients do not have to install it (unless they want it too).
 
 # Changelog
-
+* 
+* Version 1.7.0 - Vapok's Port
+   * Updated Original Code Base to work with Hildir's Update
  * Version 1.6.1
     * Fix camera's controller up and down movement.
  * Version 1.6
