@@ -71,12 +71,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CHANGELOG.md" />
     <Content Include="hammer.png" />
     <Content Include="icon.png" />
     <Content Include="ILRepack.targets" />
     <Content Include="LICENSE.txt" />
     <Content Include="manifest.json" />
-    <Content Include="readme.md" />
+    <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
